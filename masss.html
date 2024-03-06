@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Menu App</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .menu-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      padding: 20px;
+    }
+
+    .menu-item {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 10px;
+      width: 45%;
+      max-width: 300px;
+      transition: transform 0.3s ease-in-out;
+      background-color: #fff;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item:hover {
+      transform: scale(1.05);
+    }
+
+    .menu-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .menu-item-info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+      color: #777;
+    }
+
+    button {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 20px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    #order-list {
+      background-color: #fff;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin: 0 0 15px;
+      font-size: 1.5rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .menu-item {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Order Menu App</h1>
+  </header>
+
+  <div class="menu-container" id="menu-container">
+    <!-- Menu items will be dynamically added here using JavaScript -->
+  </div>
+
+  <div id="order-list">
+    <h2>Your Order</h2>
+    <ul id="order-items"></ul>
+    <button onclick="placeOrder()">Place Order</button>
+  </div>
+
+  <script>
+    const menuContainer = document.getElementById('menu-container');
+    const orderList = document.getElementById('order-items');
+
+    const menuItems = [
+      { id: 1, name: 'Burger', price: 5.99, image: 'burger.jpg' },
+      { id: 2, name: 'Pizza', price: 8.99, image: 'pizza.jpg' },
+      { id: 3, name: 'Salad', price: 4.99, image: 'salad.jpg' },
+      // Add more menu items as needed
+    ];
+
+    menuItems.forEach(item => {
+      const menuItem = document.createElement('div');
+      menuItem.classList.add('menu-item');
+      menuItem.innerHTML = `
+        <img src="https://images.pexels.com/photos/1552635/pexels-photo-1552635.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="${item.name}">
+        <div class="menu-item-info">
+          <h3>${item.name}</h3>
+          <p>$${item.price.toFixed(2)}</p>
+          <button onclick="addToOrder(${item.id}, '${item.name}', ${item.price})">Add to Order</button>
+        </div>
+      `;
+      menuContainer.appendChild(menuItem);
+    });
+
+    function addToOrder(id, name, price) {
+      const orderItem = document.createElement('li');
+      orderItem.textContent = `${name} - $${price.toFixed(2)}`;
+      orderList.appendChild(orderItem);
+    }
+
+    function sendTextMessage(orderDetails) {
+      // Simulating a server-side function to send a text message
+      console.log(`Sending text message: ${orderDetails}`);
+      // In a real-world scenario, you'd make an AJAX request to your server here
+    }
+
+    function placeOrder() {
+      const orderItems = Array.from(orderList.children).map(item => item.textContent);
+      const totalBill = orderItems.reduce((total, item) => {
+        const price = parseFloat(item.split('-')[1].trim().substring(1));
+        return total + price;
+      }, 0);
+
+      const orderDetails = {
+        totalBill: totalBill.toFixed(2),
+        foodNames: orderItems.map(item => item.split('-')[0].trim())
+      };
+
+      // Send a text message with order details
+      sendTextMessage(orderDetails);
+
+      alert('Order placed! Thank you for your order.');
+      // You can add more logic here, like sending the order to a server, etc.
+    }
+  </script>
+
+</body>
+</html>
